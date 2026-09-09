@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ml">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>സൗണ്ട് ബുക്ക് - സ്റ്റുഡന്റ് പാനൽ</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+* { box-sizing: border-box; }
+body { font-family: 'Segoe UI', sans-serif; background: #f0f3f6; margin: 0; padding: 10px; text-align: center; }
+.container { max-width: 500px; margin: 0 auto; background: #fff; border-radius: 10px; padding: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+.header { background: #2c3e50; color: #fff; padding: 12px; border-radius: 8px; margin-bottom: 15px; }
+.header h2, .header h4 { margin: 3px 0; }
+.nav-tabs { display: flex; gap: 4px; margin-bottom: 15px; flex-wrap: wrap; }
+.tab-btn { flex: 1; padding: 10px 2px; font-size: 11px; font-weight: bold; border: none; background: #7f8c8d; color: #fff; border-radius: 6px; cursor: pointer; min-width: 18%; }
+.tab-btn.active { background: #3498db; }
+
+.section { display: none; text-align: left; }
+.section.active { display: block; }
+
+/* Book View Styling */
+.book-container { position: relative; width: 100%; border: 2px solid #2c3e50; background: #000; border-radius: 6px; overflow: hidden; }
+.book-container img { width: 100%; height: auto; display: block; }
+.svg-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: auto; }
+.page-controls { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+.btn { background: #3498db; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+.btn:disabled { background: #bdc3c7; }
+
+/* Cards & Lists */
+.card { background: #f8f9fa; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; margin-bottom: 10px; }
+.arabic-text { font-family: 'Traditional Arabic', 'Amiri', sans-serif; font-size: 22px; color: #27ae60; direction: rtl; text-align: right; }
+.audio-btn { background: #2ecc71; color: #fff; border: none; padding: 6px 12px; border-radius: 20px; cursor: pointer; font-size: 12px; }
+
+/* Quiz Styling */
+.quiz-option { background: #fff; border: 2px solid #e2e8f0; padding: 10px; margin: 8px 0; border-radius: 6px; cursor: pointer; text-align: left; font-weight: bold; }
+.quiz-option.correct { background: #d4edda; border-color: #28a745; color: #155724; }
+.quiz-option.wrong { background: #f8d7da; border-color: #dc3545; color: #721c24; }
+
+.loading { display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); justify-content: center; align-items: center; font-weight: bold; z-index: 1000; }
+</style>
+</head>
+<body>
+
+<div class="loading" id="loading">📚 പഠനവിവരങ്ങൾ ലോഡ് ചെയ്യുന്നു...</div>
+
+<div class="container">
+    <div class="header">
+        <h2 id="dispLessonName">സൗണ്ട് ബുക്ക്</h2>
+        <h4 id="dispGlobalInfo">ക്ലാസ്സ് - | വിഷയം -</h4>
+    </div>
+
+    <div class="nav-tabs">
+        <button class="tab-btn active" onclick="switchTab('book')">📖 പാഠപുസ്തകം</button>
+        <button class="tab-btn" onclick="switchTab('quiz')">📝 ക്വിസ്സ്</button>
+        <button class="tab-btn" onclick="switchTab('words')">⚙️ വാക്കുകൾ</button>
+        <button class="tab-btn" onclick="switchTab('reading')">🎤 റീഡിങ്</button>
+        <button class="tab-btn" onclick="switchTab('points')">📌 പോയിന്റുകൾ</button>
+    </div>
+
+    <!-- 1. BOOK SECTION -->
+    <div id="sec-book" class="section active">
+        <div id="bookViewer">
+            <div class="book-container">
+                <img id="bookPageImg" src="" alt="Page Image">
+                <svg id="svgOverlay" class="svg-overlay" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" preserveAspectRatio="none"></svg>
+            </div>
+            <div class="page-controls">
+                <button class="btn" id="prevPageBtn" onclick="changePage(-1)">◀️ മുൻപത്തേത്</button>
+                <span id="pageBadge" style="font-weight:bold; font-size:14px;">പേജ് 0/0</span>
+                <button class="btn" id="nextPageBtn" onclick="changePage(1)">അടുത്തത് ▶️</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. QUIZ SECTION -->
+    <div id="sec-quiz" class="section">
+        <div id="quizContainer"></div>
+    </div>
+
+    <!-- 3. LIVE WORDS SECTION -->
+    <div id="sec-words" class="section">
+        <div id="wordsContainer"></div>
+    </div>
+
+    <!-- 4. READING SECTION -->
+    <div id="sec-reading" class="section">
+        <div id="readingContainer"></div>
+    </div>
+
+    <!-- 5. POINTS SECTION -->
+    <div id="sec-points" class="section">
+        <div id="pointsContainer"></div>
+    </div>
+</div>
+
+<script>
+let bookData = [], quizData = [], wordsData = [], readingData = [], pointsData = [];
+let currentPageIndex = 0;
+let currentAudio = null;
+
+window.onload = async function() {
+    await fetchAllData();
+    document.getElementById('loading').style.display = 'none';
+};
+
+async function fetchAllData() {
+    let t = Date.now();
+    try {
+        let res = await fetch(`data/data_book.json?t=${t}`);
+        if(res.ok) {
+            let data = await res.json();
+            if(data.globalInfo) {
+                document.getElementById('dispLessonName').innerText = data.globalInfo.lessonName || 'സൗണ്ട് ബുക്ക്';
+                document.getElementById('dispGlobalInfo').innerText = `${data.globalInfo.class || ''} ${data.globalInfo.subject || ''} - ${data.globalInfo.chapter || ''}`;
+            }
+            bookData = (data.pages || []).filter(p => !p.hidden);
+            renderBookPage();
+        }
+    } catch(e) {}
+
+    try {
+        let res = await fetch(`data/quiz_data.json?t=${t}`);
+        if(res.ok) {
+            let data = await res.json();
+            quizData = data.questions || [];
+            renderQuiz();
+        }
+    } catch(e) {}
+
+    try {
+        let res = await fetch(`data/data.json?t=${t}`);
+        if(res.ok) {
+            let data = await res.json();
+            wordsData = data.words || [];
+            renderWords();
+        }
+    } catch(e) {}
+
+    try {
+        let res = await fetch(`data/data_reading.json?t=${t}`);
+        if(res.ok) {
+            let data = await res.json();
+            readingData = data.lessons || [];
+            renderReading();
+        }
+    } catch(e) {}
+
+    try {
+        let res = await fetch(`data/data_points.json?t=${t}`);
+        if(res.ok) {
+            let data = await res.json();
+            pointsData = data.points || [];
+            renderPoints();
+        }
+    } catch(e) {}
+}
+
+function switchTab(type) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    
+    document.getElementById(`sec-${type}`).classList.add('active');
+    event.target.classList.add('active');
+}
+
+// ---------------- BOOK ENGINE ----------------
+function renderBookPage() {
+    if(bookData.length === 0) {
+        document.getElementById('bookViewer').innerHTML = "<p>പേജുകൾ ലഭ്യമായിട്ടില്ല.</p>";
+        return;
+    }
+    let page = bookData[currentPageIndex];
+    document.getElementById('bookPageImg').src = page.image;
+    document.getElementById('pageBadge').innerText = `പേജ് ${currentPageIndex + 1} / ${bookData.length}`;
+    
+    document.getElementById('prevPageBtn').disabled = (currentPageIndex === 0);
+    document.getElementById('nextPageBtn').disabled = (currentPageIndex === bookData.length - 1);
+
+    let svg = document.getElementById('svgOverlay');
+    svg.innerHTML = '';
+
+    // Draw Reading Paths
+    if(page.readingPaths) {
+        page.readingPaths.forEach(path => {
+            let g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+            let p = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            let dStr = `M ${path[0].x} ${path[0].y}`;
+            for(let i=1; i<path.length; i++) dStr += ` L ${path[i].x} ${path[i].y}`;
+            p.setAttribute("d", dStr);
+            p.setAttribute("stroke", "#3498db");
+            p.setAttribute("stroke-width", "4");
+            p.setAttribute("fill", "none");
+            g.appendChild(p);
+            svg.appendChild(g);
+        });
+    }
+
+    // Audio Zones Interactivity
+    if(page.zones) {
+        page.zones.forEach(zone => {
+            if(zone.audioSrc) {
+                let rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+                rect.setAttribute("x", `${zone.coords.left}%`);
+                rect.setAttribute("y", `${zone.coords.top}%`);
+                rect.setAttribute("width", `${zone.coords.width}%`);
+                rect.setAttribute("height", `${zone.coords.height}%`);
+                rect.setAttribute("fill", "rgba(46, 204, 113, 0.2)");
+                rect.setAttribute("stroke", "#2ecc71");
+                rect.style.cursor = "pointer";
+                rect.onclick = () => playAudio(zone.audioSrc);
+                svg.appendChild(rect);
+            }
+        });
+    }
+}
+
+function changePage(dir) {
+    currentPageIndex += dir;
+    renderBookPage();
+}
+
+// ---------------- QUIZ ENGINE ----------------
+function renderQuiz() {
+    let container = document.getElementById('quizContainer');
+    container.innerHTML = '';
+    if(quizData.length === 0) { container.innerHTML = "<p>ചോദ്യങ്ങൾ ലഭ്യമല്ല.</p>"; return; }
+
+    quizData.forEach((q, idx) => {
+        let card = document.createElement('div');
+        card.className = 'card';
+        
+        let html = `<div><b>Q${idx + 1}: ${q.qText}</b></div>`;
+        if(q.qSrc) html += `<button class="audio-btn" style="margin:5px 0;" onclick="playAudio('${q.qSrc}')">🔊 ചോദ്യം കേൾക്കുക</button>`;
+        
+        let options = [
+            { text: q.correctText, isCorrect: true, audio: q.correctSrc },
+            { text: q.wrong1Text, isCorrect: false, audio: q.wrong1Src },
+            { text: q.wrong2Text, isCorrect: false, audio: q.wrong2Src }
+        ].filter(o => o.text).sort(() => Math.random() - 0.5);
+
+        options.forEach(opt => {
+            html += `<div class="quiz-option" onclick="checkQuizAnswer(this, ${opt.isCorrect}, '${opt.audio}')">${opt.text}</div>`;
+        });
+
+        card.innerHTML = html;
+        container.appendChild(card);
+    });
+}
+
+function checkQuizAnswer(el, isCorrect, audioSrc) {
+    if(audioSrc) playAudio(audioSrc);
+    if(isCorrect) {
+        el.classList.add('correct');
+    } else {
+        el.classList.add('wrong');
+    }
+}
+
+// ---------------- WORDS ENGINE ----------------
+function renderWords() {
+    let container = document.getElementById('wordsContainer');
+    container.innerHTML = '';
+    wordsData.forEach(w => {
+        let card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <div style="font-size:16px; font-weight:bold;">${w.mal}</div>
+                    <div class="arabic-text">${w.arbiText || ''}</div>
+                </div>
+                ${w.audio ? `<button class="audio-btn" onclick="playAudio('${w.audio}')">🔊 കേൾക്കുക</button>` : ''}
+            </div>
+        `;
+        container.appendChild(card);
+    });
+}
+
+// ---------------- READING ENGINE ----------------
+function renderReading() {
+    let container = document.getElementById('readingContainer');
+    container.innerHTML = '';
+    readingData.forEach(r => {
+        let card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+            <h4>📖 ${r.title}</h4>
+            <p style="font-size:15px; line-height:1.6; background:#fff; padding:10px; border-radius:5px;">${r.text}</p>
+        `;
+        container.appendChild(card);
+    });
+}
+
+// ---------------- POINTS ENGINE ----------------
+function renderPoints() {
+    let container = document.getElementById('pointsContainer');
+    container.innerHTML = '';
+    pointsData.forEach(p => {
+        let card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <p style="margin:0; font-weight:bold; font-size:14px;">📌 ${p.text}</p>
+                ${p.audio ? `<button class="audio-btn" onclick="playAudio('${p.audio}')">🔊</button>` : ''}
+            </div>
+        `;
+        container.appendChild(card);
+    });
+}
+
+function playAudio(src) {
+    if(currentAudio) currentAudio.pause();
+    currentAudio = new Audio(src);
+    currentAudio.play().catch(e => console.log("Audio Play Failed"));
+}
+</script>
+</body>
+</html>
