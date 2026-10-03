@@ -255,6 +255,12 @@ h2 { color: #2c3e50; margin: 0; font-size: 20px; }
 </div>
 
 <script>
+// GitHub വിവരങ്ങൾ ഡയറക്ട് ആയി ചേർത്തിരിക്കുന്നു
+const GH_USER = "zain-zain22"; 
+const GH_REPO = "class-2-duroos-part-2-chater-1"; 
+const GH_BRANCH = "main";
+const BASE_URL = `https://raw.githubusercontent.com/${GH_USER}/${GH_REPO}/${GH_BRANCH}/`;
+
 let allWordsList = []; 
 let currentQuestionIndex = 0; 
 let leftWord = null;
@@ -342,20 +348,37 @@ function makeElementDraggable(elmnt) {
 
 async function loadDataFromJSON() {
     try {
-        let response = await fetch('data/data.json?t=' + Date.now());
-        let rawData = await response.json();
+        let timeStamp = Date.now();
         
-        if(rawData.madrassas) {
-            let mSelect = document.getElementById('madrasaSelect');
-            mSelect.innerHTML = '';
-            rawData.madrassas.forEach(m => {
-                let opt = document.createElement('option');
-                opt.value = m.name; opt.innerText = m.name;
-                mSelect.appendChild(opt);
-            });
-            window.schoolConfig = rawData.madrassas;
-            updateStudentDropdown();
+        // 1. മദ്രസയും കുട്ടികളുടെ വിവരങ്ങളും GitHub-ൽ നിന്ന് ഫെച്ച് ചെയ്യുന്നു
+        try {
+            let mRes = await fetch(BASE_URL + 'data/master_list.json?t=' + timeStamp);
+            if(mRes.ok) {
+                let masterData = await mRes.json();
+                let mSelect = document.getElementById('madrasaSelect');
+                mSelect.innerHTML = '';
+                
+                let schoolList = [];
+                Object.keys(masterData).forEach(mName => {
+                    schoolList.push({ name: mName, students: masterData[mName] });
+                    let opt = document.createElement('option');
+                    opt.value = mName; opt.innerText = mName;
+                    mSelect.appendChild(opt);
+                });
+                window.schoolConfig = schoolList;
+                updateStudentDropdown();
+            }
+        } catch(err) {
+            console.warn("master_list.json ഫെച്ച് ചെയ്യാനായില്ല:", err);
         }
+
+        // 2. വേർഡ് ഡാറ്റ GitHub-ൽ നിന്ന് ഫെച്ച് ചെയ്യുന്നു
+        let response = await fetch(BASE_URL + 'data/data.json?t=' + timeStamp);
+        if(!response.ok) {
+            // ബാക്കപ്പ് ലോക്കൽ ഫെച്ച്
+            response = await fetch('data/data.json?t=' + timeStamp);
+        }
+        let rawData = await response.json();
         
         if(rawData.words && Array.isArray(rawData.words)) {
             let totalWords = rawData.words;
@@ -364,7 +387,8 @@ async function loadDataFromJSON() {
             console.log("ഗെയിമിനായി ലോഡ് ചെയ്ത ആകെ വാക്കുകൾ:", allWordsList.length);
         }
     } catch (e) {
-        alert("ഡാറ്റ ലോഡ് ചെയ്യാൻ കഴിഞ്ഞില്ല!");
+        console.error(e);
+        alert("ഡാറ്റ ഗിറ്റ്ഹബ്ബിൽ നിന്ന് ലോഡ് ചെയ്യാൻ കഴിഞ്ഞില്ല! ഇന്റർനെറ്റ് കണക്ഷൻ പരിശോധിക്കുക.");
     }
 }
 
@@ -460,8 +484,13 @@ function playTargetAudioLoop() {
     if(currentAudio) currentAudio.pause();
     
     let audioPath = targetWord.audio;
-    if (!audioPath.startsWith('data/') && !audioPath.startsWith('http')) {
-        audioPath = 'data/' + audioPath;
+    // GitHub ഓൺലൈൻ URL ലിങ്ക് രൂപീകരിക്കുന്നു
+    if (!audioPath.startsWith('http')) {
+        if (audioPath.startsWith('data/')) {
+            audioPath = BASE_URL + audioPath;
+        } else {
+            audioPath = BASE_URL + 'data/' + audioPath;
+        }
     }
     
     currentAudio = new Audio(audioPath + '?t=' + Date.now());
