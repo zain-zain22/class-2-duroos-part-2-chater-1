@@ -1,5 +1,5 @@
 {
-  "version": 1791026961192,
+  "version": 1791047370656,
   "words": [
     {
       "mal": "മലയാളം",
@@ -2030,13 +2030,15 @@
             "y": 477
           }
         ]
-      ]
+      ],
+      "hidden": false
     },
     {
       "mal": "ഉമ്മ",
       "arbiText": "اُمَّ",
       "audio": "data/audio_live_1791026942306_r2.mp3",
-      "writingPaths": null
+      "writingPaths": null,
+      "hidden": false
     }
   ]
 }
