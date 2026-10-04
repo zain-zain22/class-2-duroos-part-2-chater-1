@@ -458,12 +458,19 @@ async function loadOldDataFromGitHub() {
         } 
     } catch(e) {} 
     try {
-        let res4 = await fetch('data/data.json?t=' + Date.now());
-        if(res4.ok) {
-            let oldWordData = await res4.json();
-            if(oldWordData && Array.isArray(oldWordData.words)) liveWordsMemory = oldWordData.words.map(w => ({ ...w, isNew: false }));
+    let res4 = await fetch('data/data.json?t=' + Date.now());
+    if(res4.ok) {
+        let oldWordData = await res4.json();
+        if(oldWordData && Array.isArray(oldWordData.words)) {
+            liveWordsMemory = oldWordData.words.map(w => ({ 
+                ...w, 
+                isNew: false, 
+                hidden: !!(w.hidden || w.isHidden) 
+            }));
         }
-    } catch(e) {}
+    }
+} catch(e) {}
+
     try {
         let res5 = await fetch('data/data_reading.json?t=' + Date.now());
         if(res5.ok) {
