@@ -1009,9 +1009,11 @@ function renderLiveWordsList() {
         if (w.writingPaths) {
             liveHandwritingMemory[liveWordCount] = w.writingPaths;
         }
-        createLiveWordRowElement(liveWordCount, w.mal, w.arbiText, w.audio, false);
+        // w.hidden ഡാറ്റ കൂടി createLiveWordRowElement-ലേക്ക് അയക്കുന്നു
+        createLiveWordRowElement(liveWordCount, w.mal, w.arbiText, w.audio, false, !!w.hidden);
     });
 }
+
 
 function addNewLiveWordRow() { liveWordCount++; createLiveWordRowElement(liveWordCount, '', '', '', true); }
 
