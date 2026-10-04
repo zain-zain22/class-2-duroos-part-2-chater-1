@@ -1,645 +1,464 @@
-<!DOCTYPE html>
-<html lang="ml">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>വേർഡ് ആപ്പ് - പ്രോ ലൈവ് റൂം</title>
+<!DOCTYPE html> 
+<html lang="ml"> 
+<head> 
+<meta charset="UTF-8"> 
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"> 
+<title>സൗണ്ട് ബുക്ക് - സ്റ്റുഡന്റ് കേട്ടെഴുത്ത് പാനൽ</title> 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<style>
-:root {
-    --arabic-font-size: 65px;   
-    --box-left-move: 0px;       
-    --box-top-move: 2px;        
-}
-
-* { box-sizing: border-box; }
-body { font-family: 'Segoe UI', sans-serif; background: #eef2f3; margin: 0; padding: 10px; text-align: center; user-select: none; height: 100vh; overflow: hidden; }
-
+<style> 
+*, *::before, *::after { box-sizing: border-box; } 
+body { 
+    font-family: 'Segoe UI', system-ui, sans-serif; 
+    background: #111827; 
+    color: #f3f4f6; 
+    margin: 0; 
+    padding: 0; 
+    display: block; 
+    text-align: center; 
+} 
 .container { 
-    max-width: 98%; 
+    max-width: 800px; 
     margin: 0 auto; 
-    background: white; 
-    padding: 12px; 
-    border-radius: 12px; 
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
-    border-top: 5px solid #2ecc71; 
-    height: 95vh; 
-    display: flex; 
-    flex-direction: column; 
-    justify-content: space-between; 
-    position: relative; 
-}
-
-h2 { color: #2c3e50; margin: 0; font-size: 20px; }
-.header-area { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
-
-.four-lines-container {
-    display: flex;
-    justify-content: space-between;
-    gap: 15px;
-    margin: 8px 0;
-    width: 100%;
-}
-
-.four-line-box {
-    flex: 1;
-    height: 160px; 
-    background: #fff;
-    border: 2px solid #cbd5e1;
-    border-radius: 8px;
-    position: relative;
-    overflow: hidden;
-    background-image: 
-        linear-gradient(#e74c3c 1px, transparent 1px), 
-        linear-gradient(#3498db 1px, transparent 1px), 
-        linear-gradient(#3498db 1px, transparent 1px), 
-        linear-gradient(#e74c3c 1px, transparent 1px);
-    background-size: 100% 160px;
-    background-position: 0 40px, 0 70px, 0 100px, 0 130px;
-    background-repeat: no-repeat;
-}
-
-.writing-board-section {
-    margin-top: 5px;
-    border-top: 2px dashed #bdc3c7;
-    padding-top: 5px;
-}
-.writing-title {
+    padding: 20px; 
+    min-height: 100vh; 
+} 
+h1 { 
+    color: #38bdf8; 
+    font-size: 28px; 
+    margin-top: 10px; 
+    margin-bottom: 5px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5); 
+} 
+.lesson-info-badge {
+    background: #1f2937;
+    color: #f59e0b;
+    padding: 6px 14px;
+    border-radius: 20px;
     font-size: 14px;
     font-weight: bold;
-    color: #e67e22;
-    text-align: left;
-    margin-bottom: 3px;
+    display: inline-block;
+    margin-bottom: 15px;
+    border: 1px solid #374151;
 }
-.full-width-board {
-    width: 100%;
-    height: 300px; 
-    background: #fff;
-    border: 2px solid #e67e22;
-    border-radius: 8px;
-    position: relative;
-    overflow: hidden;
-}
+.setup-box { 
+    background: #1f2937; 
+    padding: 30px; 
+    border-radius: 12px; 
+    box-shadow: 0 10px 25px rgba(0,0,0,0.4); 
+    margin-top: 20px; 
+    text-align: left; 
+    border: 1px solid #374151; 
+} 
+.setup-box h3 { 
+    text-align: center; 
+    color: #f3f4f6; 
+    margin-top: 0; 
+} 
+.input-label { 
+    font-weight: bold; 
+    color: #9ca3af; 
+    display: block; 
+    margin-bottom: 5px; 
+} 
+input[type="text"] { 
+    width: 100%; 
+    padding: 12px; 
+    background: #374151; 
+    border: 1px solid #4b5563; 
+    border-radius: 6px; 
+    color: white; 
+    font-size: 16px; 
+    margin-bottom: 15px; 
+} 
+button { 
+    background: #0284c7; 
+    color: white; 
+    border: none; 
+    padding: 14px 20px; 
+    border-radius: 8px; 
+    cursor: pointer; 
+    font-weight: bold; 
+    font-size: 16px; 
+    width: 100%; 
+    transition: background 0.2s; 
+} 
+button:hover { background: #0369a1; } 
 
-.hw-canvas-svg {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 5;
-    pointer-events: none;
-}
+/* എക്സാം സ്ക്രീൻ സ്റ്റൈലുകൾ */
+.exam-card { 
+    background: #1f2937; 
+    border-radius: 16px; 
+    padding: 40px 20px; 
+    box-shadow: 0 15px 35px rgba(0,0,0,0.5); 
+    margin-top: 10px; 
+    border: 1px solid #374151; 
+} 
+.word-badge { 
+    background: #374151; 
+    color: #38bdf8; 
+    padding: 6px 16px; 
+    border-radius: 20px; 
+    font-size: 18px; 
+    font-weight: bold; 
+    display: inline-block; 
+    margin-bottom: 20px; 
+} 
+.instruction { 
+    font-size: 24px; 
+    color: #e5e7eb; 
+    margin-bottom: 30px; 
+} 
 
-.arbi-text {
-    font-size: var(--arabic-font-size);
-    font-family: 'Arabic Typesetting', 'Traditional Arabic', 'Amiri', sans-serif;
-    color: #2c3e50;
-    direction: rtl;
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    z-index: 2;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    white-space: nowrap;
-    transform: translate(var(--box-left-move), var(--box-top-move)); 
-}
+/* വൃത്താകൃതിയിലുള്ള വലിയ ടൈമർ */
+.timer-container { 
+    position: relative; 
+    width: 180px; 
+    height: 180px; 
+    margin: 0 auto 30px auto; 
+} 
+.timer-svg { 
+    transform: rotate(-90deg); 
+    width: 180px; 
+    height: 180px; 
+} 
+.timer-svg circle { 
+    stroke-width: 10px; 
+    fill: transparent; 
+} 
+.timer-bg { stroke: #374151; } 
+.timer-progress { 
+    stroke: #ef4444; 
+    stroke-dasharray: 502; 
+    stroke-dashoffset: 0; 
+    stroke-linecap: round; 
+    transition: stroke-dashoffset 1s linear; 
+} 
+.timer-text { 
+    position: absolute; 
+    top: 50%; 
+    left: 50%; 
+    transform: translate(-50%, -50%); 
+    font-size: 55px; 
+    font-weight: bold; 
+    color: #ef4444; 
+} 
 
-.result-badge { position: absolute; top: 10px; right: 10px; font-size: 35px; z-index: 10; display: none; }
-.result-badge-tick { color: #2ecc71; }
-.timer-container { width: 100%; background: #ddd; height: 8px; border-radius: 4px; overflow: hidden; margin-bottom: 5px; }
-.timer-bar { height: 100%; background: #e74c3c; width: 100%; transition: width 0.1s linear; }
+/* ഉത്തരം വെളിപ്പെടുത്തുന്ന പാനൽ */
+.answer-panel { 
+    margin-top: 30px; 
+    border-top: 3px dashed #4b5563; 
+    padding-top: 30px; 
+    animation: zoomIn 0.4s ease-out; 
+} 
+.ans-label { 
+    font-size: 18px; 
+    color: #f59e0b; 
+    font-weight: bold; 
+    margin-bottom: 15px; 
+} 
+.ans-malayalam { 
+    font-size: 55px; 
+    font-weight: bold; 
+    color: #ffffff; 
+    margin-bottom: 15px; 
+} 
+.ans-arabic { 
+    font-size: 85px; 
+    font-weight: bold; 
+    color: #10b981; 
+    font-family: 'Amiri', 'Traditional Arabic', serif; 
+    direction: rtl; 
+    margin-bottom: 15px; 
+} 
+.hw-display-svg { 
+    width: 100%; 
+    max-width: 450px; 
+    height: 240px; 
+    border: 2px solid #4b5563; 
+    background: #111827; 
+    border-radius: 8px; 
+    margin: 15px auto; 
+    display: block; 
+} 
 
-.alignment-controller {
+.loading-overlay { 
+    display: none; 
+    position: fixed; 
+    top: 0; left: 0; width: 100%; height: 100%; 
+    background: rgba(17,24,39,0.9); 
+    color: white; 
+    justify-content: center; 
+    align-items: center; 
+    font-size: 22px; 
+    font-weight: bold; 
+    z-index: 9999; 
+} 
+.control-btns { 
+    display: flex; 
+    gap: 10px; 
+    max-width: 300px; 
+    margin: 20px auto 0 auto; 
+} 
+.btn-secondary { background: #4b5563; } 
+.btn-secondary:hover { background: #374151; }
+
+.toast-msg {
     position: fixed;
-    top: 15px;
-    right: 15px;
-    background: rgba(44, 62, 80, 0.95);
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #ef4444;
     color: white;
-    padding: 10px;
+    padding: 10px 20px;
     border-radius: 8px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    font-size: 14px;
+    display: none;
     z-index: 10000;
-    width: 180px;
-    text-align: left;
-    font-size: 11px;
-}
-.drag-header {
-    padding: 3px;
-    cursor: move;
-    background-color: #2980b9;
-    color: white;
-    font-weight: bold;
-    text-align: center;
-    border-radius: 4px;
-    margin-bottom: 6px;
-    font-size: 12px;
-}
-.alignment-controller label { color: #bdc3c7; margin-top: 4px; font-size: 10px; display: flex; justify-content: space-between;}
-.alignment-controller input, .alignment-controller select { width: 100%; margin: 2px 0; }
-.alignment-controller select { background: #34495e; color: white; border: 1px solid #7f8c8d; padding: 3px; border-radius: 4px;}
-
-.btn-pause {
-    background: #e67e22;
-    color: white;
-    border: none;
-    padding: 5px;
-    font-size: 12px;
-    font-weight: bold;
-    border-radius: 4px;
-    cursor: pointer;
-    width: 100%;
-    margin-top: 8px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 5px;
-}
-.btn-pause.paused { background: #2ecc71; }
-
-@media screen and (max-height: 500px) and (orientation: landscape) {
-    body { padding: 4px; }
-    .container { height: 97vh; padding: 6px; }
-    h2 { font-size: 16px; }
-    .header-area h3 { font-size: 13px; margin: 0; }
-    
-    .four-line-box { 
-        height: 105px; 
-        background-size: 100% 105px;
-        background-position: 0 25px, 0 45px, 0 65px, 0 85px;
-    }
-    .full-width-board { height: 105px; }
-    .writing-board-section { margin-top: 2px; padding-top: 2px; }
-    .writing-title { font-size: 12px; margin-bottom: 1px; }
 }
 
-.overlay-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(44, 62, 80, 0.95); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; color: white; padding: 20px; }
+@keyframes zoomIn { 
+    from { opacity: 0; transform: scale(0.95); } 
+    to { opacity: 1; transform: scale(1); } 
+} 
+</style> 
+</head> 
+<body> 
 
-.btn-restart { background: #3498db; color: white; border: none; padding: 12px 25px; font-size: 16px; border-radius: 5px; cursor: pointer; margin-top: 15px; box-shadow: 0 4px 0 #2980b9; }
-.btn-restart:active { transform: translateY(4px); box-shadow: none; }
-.btn-green { background: #2ecc71; color: white; border: none; padding: 10px 20px; font-size: 15px; border-radius: 5px; cursor: pointer; margin-top: 10px; width: 100%; }
-</style>
-</head>
-<body>
+<div class="loading-overlay" id="loadingOverlay"> 
+    <div><i class="fa-solid fa-spinner fa-spin" style="margin-bottom:10px; font-size:40px; color:#38bdf8;"></i><br><span id="loadText">📦 അഡ്മിൻ ഡാറ്റകൾ ശേഖരിക്കുന്നു...</span></div> 
+</div> 
 
-<div class="alignment-controller" id="liveTool" style="display:none;">
-    <div class="drag-header" id="dragHandle"><i class="fa-solid fa-arrows-to-dot"></i> ഇവിടെ പിടിച്ചു നീക്കുക</div>
-    
-    <label>ഫോണ്ട് മാറ്റുക:</label>
-    <select id="fontSelect" onchange="adjustText()">
-        <option value="'Arabic Typesetting'">Arabic Typesetting</option>
-        <option value="'Traditional Arabic'">Traditional Arabic</option>
-        <option value="'Lateef'">Lateef (സുന്ദരമായ ഫോണ്ട്)</option>
-        <option value="'Scheherazade New'">Scheherazade New</option>
-        <option value="'Simplified Arabic'">Simplified Arabic</option>
-        <option value="'Amiri'">Amiri Font</option>
-        <option value="sans-serif">Normal Sans-Serif</option>
-    </select>
+<div class="container"> 
+    <h1>🎤 സൗണ്ട് ബുക്ക് - കേട്ടെഴുത്ത് സ്റ്റുഡന്റ് റൂം</h1> 
+    <div class="lesson-info-badge" id="lessonInfoTag" style="display:none;">-</div>
 
-    <label>വലിപ്പം: <span id="valSize">65px</span></label>
-    <input type="range" id="sliderSize" min="20" max="200" value="65" oninput="adjustText()">
-    
-    <label>ഉയരം: <span id="valTop">2px</span></label>
-    <input type="range" id="sliderTop" min="-40" max="40" value="2" oninput="adjustText()">
-    
-    <label>ഇടത്/വലത്: <span id="valLeft">0px</span></label>
-    <input type="range" id="sliderLeft" min="-80" max="80" value="0" oninput="adjustText()">
+    <div class="setup-box" id="setupBox"> 
+        <h3>🔄 സെറ്റപ്പ് പാനൽ</h3> 
+        <label class="input-label">നിങ്ങളുടെ GitHub യൂസർനെയിം നൽകുക:</label> 
+        <input type="text" id="userInput" value="zain-zain22"> 
+        <label class="input-label">റപ്പോസിറ്ററി പേര് നൽകുക:</label> 
+        <input type="text" id="repoInput" value="class-2-duroos-part-2-chater-1"> 
+        <button onclick="fetchWordsFromAdmin()">🚀 വാക്കുകൾ ലോഡ് ചെയ്ത് പരീക്ഷ തുടങ്ങുക</button> 
+    </div> 
 
-    <button id="pauseBtn" class="btn-pause" onclick="togglePause()"><i class="fa-solid fa-pause"></i> Pause</button>
-</div>
+    <div id="examBox" style="display: none;"> 
+        <div class="exam-card"> 
+            <div class="word-badge" id="wordIndexTitle">വാക്ക് 1 / 30</div> 
+            <div class="instruction" id="examStatusText">✍️ വോയ്സ് ശ്രദ്ധിച്ചു ബുക്കിലേക്ക് എഴുതുക...</div> 
 
-<div id="startOverlay" class="overlay-screen">
-    <h1><i class="fa-solid fa-display fa-2x" style="color:#2ecc71; margin-bottom:10px; display:block;"></i> വേർഡ് ആപ്പ് സ്മാർട്ട് ലൈവ് 🪄</h1>
-    <div style="width:100%; max-width:350px;">
-        <label style="color:white;">🏫 മദ്രസ തിരഞ്ഞെടുക്കുക:</label>
-        <select id="madrasaSelect" onchange="updateStudentDropdown()"></select>
-        
-        <label style="color:white;">👤 കുട്ടിയുടെ പേര്:</label>
-        <select id="studentSelect"></select>
-        
-        <button class="btn btn-green" onclick="startGame()">🚀 ക്ലാസ്സ് ആരംഭിക്കുക</button>
-    </div>
-</div>
+            <div class="timer-container" id="timerSection"> 
+                <svg class="timer-svg"> 
+                    <circle class="timer-bg" cx="90" cy="90" r="80"></circle> 
+                    <circle class="timer-progress" id="timerProgressCircle" cx="90" cy="90" r="80"></circle> 
+                </svg> 
+                <div class="timer-text" id="countdownText">60</div> 
+            </div> 
 
-<div class="container" id="gameContent" style="display:none;">
-    <div class="header-area">
-        <h3 id="studentHeading" style="color:#7f8c8d; font-size: 14px;">👤 കുട്ടി: </h3>
-        <h2>ശ്രദ്ധിച്ചു കേൾക്കുക, എഴുതുന്നത് നോക്കുക! 🎧🖋️</h2>
-        <span style="color:#aaa; font-size:11px;" id="modeIndicator">Smart Mode</span>
-    </div>
+            <div class="answer-panel" id="answerPanel" style="display: none;"> 
+                <div class="ans-label">📢 ശരിയായ ഉത്തരം:</div> 
+                <div class="ans-malayalam" id="ansMal">മലയാളം</div> 
+                <div class="ans-arabic" id="ansArbi">അറബി മലയാളം</div> 
+                <svg class="hw-display-svg" id="ansHwSvg" viewBox="0 0 1000 1000" preserveAspectRatio="none" style="display:none;"></svg> 
+            </div> 
+        </div> 
 
-    <div class="timer-container" id="timerContainer">
-        <div class="timer-bar" id="timerBar"></div>
-    </div>
+        <div class="control-btns"> 
+            <button class="btn-secondary" onclick="replayCurrentAudio()">🔊 വീണ്ടും കേൾക്കുക</button> 
+            <button class="btn-secondary" style="background:#ef4444;" onclick="exitExamMode()">🛑 നിർത്തുക</button> 
+        </div> 
+    </div> 
+</div> 
 
-    <div class="four-lines-container">
-        <div class="four-line-box" id="boxLeft">
-            <div class="arbi-text" id="textLeft"></div>
-            <div class="result-badge" id="tickLeft"><i class="fa-solid fa-circle-check result-badge-tick"></i></div>
-        </div>
+<div id="toast" class="toast-msg"></div>
 
-        <div class="four-line-box" id="boxRight">
-            <div class="arbi-text" id="textRight"></div>
-            <div class="result-badge" id="tickRight"><i class="fa-solid fa-circle-check result-badge-tick"></i></div>
-        </div>
-    </div>
+<script> 
+let wordsDatabase = []; 
+let currentIdx = 0; 
+let countdownValue = 60; 
+let countdownTimer = null; 
+let audioLoopTimer = null; 
+let dictationAudio = new Audio(); 
 
-    <div class="writing-board-section" id="writingSection" style="display:none;">
-        <div class="writing-title"><i class="fa-solid fa-pen-fancy"></i> എഴുതുന്ന രൂപം ശ്രദ്ധിക്കുക:</div>
-        <div class="full-width-board">
-            <svg class="hw-canvas-svg" id="svgWritingBoard" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 700" preserveAspectRatio="xMidYMid meet"></svg>
-        </div>
-    </div>
-</div>
-
-<script>
-// GitHub വിവരങ്ങൾ ഡയറക്ട് ആയി ചേർത്തിരിക്കുന്നു
-const GH_USER = "zain-zain22"; 
-const GH_REPO = "class-2-duroos-part-2-chater-1"; 
-const GH_BRANCH = "main";
-const BASE_URL = `https://raw.githubusercontent.com/${GH_USER}/${GH_REPO}/${GH_BRANCH}/`;
-
-let allWordsList = []; 
-let currentQuestionIndex = 0; 
-let leftWord = null;
-let rightWord = null;
-let targetWord = null;
-let currentAudio = null;
-let timerInterval = null;
-let maxDuration = 60; 
-let timeLeft = 60;   
-let isPaused = false; 
-let audioContextUnlocked = false; 
-
-window.onload = function() {
-    loadDataFromJSON();
-    makeElementDraggable(document.getElementById("liveTool"));
+function showToast(msg) {
+    let t = document.getElementById("toast");
+    t.textContent = msg;
+    t.style.display = "block";
+    setTimeout(() => { t.style.display = "none"; }, 3000);
 }
 
-function adjustText() {
-    let size = document.getElementById('sliderSize').value;
-    let top = document.getElementById('sliderTop').value;
-    let left = document.getElementById('sliderLeft').value;
-    let chosenFont = document.getElementById('fontSelect').value;
+async function fetchWordsFromAdmin() { 
+    const user = document.getElementById('userInput').value.trim(); 
+    const repo = document.getElementById('repoInput').value.trim(); 
+    if(!user || !repo) return alert("യൂസർനെയിമും റപ്പോസിറ്ററിയും കൃത്യമായി നൽകുക!"); 
+
+    document.getElementById('loadingOverlay').style.display = 'flex'; 
     
-    document.getElementById('valSize').innerText = size + 'px';
-    document.getElementById('valTop').innerText = top + 'px';
-    document.getElementById('valLeft').innerText = left + 'px';
-    
-    let texts = document.querySelectorAll('.arbi-text');
-    texts.forEach(txt => {
-        txt.style.fontSize = size + 'px';
-        txt.style.fontFamily = chosenFont + ", 'Amiri', sans-serif"; 
-        txt.style.transform = `translate(${left}px, ${top}px)`;
-    });
-}
+    // അഡ്മിൻ പാനൽ അപ്‌ലോഡ് ചെയ്യുന്ന data.json ഫയലിൽ നിന്ന് നേരിട്ട് ഡാറ്റ എടുക്കുന്നു
+    const url = `https://raw.githubusercontent.com/${user}/${repo}/main/data/data.json?t=${Date.now()}`; 
 
-function makeElementDraggable(elmnt) {
-    let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-    const handle = document.getElementById("dragHandle");
-    
-    if (handle) {
-        handle.onmousedown = dragMouseDown;
-        handle.ontouchstart = dragMouseDown;
-    } else {
-        elmnt.onmousedown = dragMouseDown;
-        elmnt.ontouchstart = dragMouseDown;
-    }
+    try { 
+        let response = await fetch(url); 
+        if(!response.ok) throw new Error("ഫയൽ കണ്ടെത്താൻ കഴിഞ്ഞില്ല. അഡ്മിൻ പാനലിൽ നിന്ന് പബ്ലിഷ് ചെയ്തിട്ടുണ്ടെന്ന് ഉറപ്പാക്കുക."); 
+        
+        let data = await response.json(); 
 
-    function dragMouseDown(e) {
-        e = e || window.event;
-        let clientX = e.type === "touchstart" ? e.touches[0].clientX : e.clientX;
-        let clientY = e.type === "touchstart" ? e.touches[0].clientY : e.clientY;
-        
-        pos3 = clientX;
-        pos4 = clientY;
-        
-        document.onmouseup = closeDragElement;
-        document.onmousemove = elementDrag;
-        
-        document.ontouchend = closeDragElement;
-        document.ontouchmove = elementDrag;
-    }
-
-    function elementDrag(e) {
-        e = e || window.event;
-        let clientX = e.type === "touchmove" ? e.touches[0].clientX : e.clientX;
-        let clientY = e.type === "touchmove" ? e.touches[0].clientY : e.clientY;
-        
-        pos1 = pos3 - clientX;
-        pos2 = pos4 - clientY;
-        pos3 = clientX;
-        pos4 = clientY;
-        
-        elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
-        elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
-        elmnt.style.right = "auto"; 
-    }
-
-    function closeDragElement() {
-        document.onmouseup = null;
-        document.onmousemove = null;
-        document.ontouchend = null;
-        document.ontouchmove = null;
-    }
-}
-
-async function loadDataFromJSON() {
-    try {
-        let timeStamp = Date.now();
-        
-        // 1. മദ്രസയും കുട്ടികളുടെ വിവരങ്ങളും GitHub-ൽ നിന്ന് ഫെച്ച് ചെയ്യുന്നു
-        try {
-            let mRes = await fetch(BASE_URL + 'data/master_list.json?t=' + timeStamp);
-            if(mRes.ok) {
-                let masterData = await mRes.json();
-                let mSelect = document.getElementById('madrasaSelect');
-                mSelect.innerHTML = '';
-                
-                let schoolList = [];
-                Object.keys(masterData).forEach(mName => {
-                    schoolList.push({ name: mName, students: masterData[mName] });
-                    let opt = document.createElement('option');
-                    opt.value = mName; opt.innerText = mName;
-                    mSelect.appendChild(opt);
-                });
-                window.schoolConfig = schoolList;
-                updateStudentDropdown();
-            }
-        } catch(err) {
-            console.warn("master_list.json ഫെച്ച് ചെയ്യാനായില്ല:", err);
+        if(data.globalInfo || data.quizInfo) {
+            let info = data.globalInfo || data.quizInfo;
+            let tagText = `📚 ${info.class || ''} | ${info.subject || ''} | ${info.lessonName || ''}`;
+            let tagElem = document.getElementById('lessonInfoTag');
+            tagElem.innerText = tagText;
+            tagElem.style.display = 'inline-block';
         }
 
-        // 2. വേർഡ് ഡാറ്റ GitHub-ൽ നിന്ന് ഫെച്ച് ചെയ്യുന്നു
-        let response = await fetch(BASE_URL + 'data/data.json?t=' + timeStamp);
-        if(!response.ok) {
-            // ബാക്കപ്പ് ലോക്കൽ ഫെച്ച്
-            response = await fetch('data/data.json?t=' + timeStamp);
-        }
-        let rawData = await response.json();
-        
-        if(rawData.words && Array.isArray(rawData.words)) {
-            let totalWords = rawData.words;
-            allWordsList = totalWords.length > 30 ? totalWords.slice(-30) : totalWords;
-            currentQuestionIndex = 0; 
-            console.log("ഗെയിമിനായി ലോഡ് ചെയ്ത ആകെ വാക്കുകൾ:", allWordsList.length);
-        }
-    } catch (e) {
-        console.error(e);
-        alert("ഡാറ്റ ഗിറ്റ്ഹബ്ബിൽ നിന്ന് ലോഡ് ചെയ്യാൻ കഴിഞ്ഞില്ല! ഇന്റർനെറ്റ് കണക്ഷൻ പരിശോധിക്കുക.");
-    }
-}
-
-function updateStudentDropdown() {
-    let currentMadrasa = document.getElementById('madrasaSelect').value;
-    let sSelect = document.getElementById('studentSelect');
-    sSelect.innerHTML = '';
-    if(window.schoolConfig) {
-        let found = window.schoolConfig.find(m => m.name === currentMadrasa);
-        if(found && found.students) {
-            found.students.forEach(student => {
-                let opt = document.createElement('option');
-                opt.value = student; opt.innerText = student;
-                sSelect.appendChild(opt);
-            });
-        }
-    }
-}
-
-function unlockAudio() {
-    if (!audioContextUnlocked) {
-        let context = new (window.AudioContext || window.webkitAudioContext)();
-        if (context.state === 'suspended') {
-            context.resume();
-        }
-        audioContextUnlocked = true;
-    }
-}
-
-function startGame() {
-    unlockAudio(); 
-    let student = document.getElementById('studentSelect').value;
-    if(!student) return alert("പേര് തിരഞ്ഞെടുക്കുക!");
-    if(allWordsList.length < 1) return alert("വാക്കുകൾ ലഭ്യമല്ല!");
-    
-    document.getElementById('studentHeading').innerText = `👤 കുട്ടി: ${student}`;
-    document.getElementById('startOverlay').style.display = 'none';
-    document.getElementById('gameContent').style.display = 'block';
-    document.getElementById('liveTool').style.display = 'block';
-    
-    generateQuestion();
-}
-
-function generateQuestion() {
-    if(currentQuestionIndex >= allWordsList.length) {
-        if(currentAudio) currentAudio.pause();
-        clearInterval(timerInterval);
-        document.getElementById('liveTool').style.display = 'none';
-        document.getElementById('gameContent').innerHTML = `
-            <div style="margin-top: 18vh;">
-                <h2 style="color:#2ecc71; font-size:30px; margin-bottom:15px;">🎉 എല്ലാ വാക്കുകളും കഴിഞ്ഞു! 🎉</h2>
-                <button class="btn-restart" onclick="location.reload();"><i class="fa-solid fa-rotate-right"></i> വീണ്ടും കളിക്കുക</button>
-            </div>
-        `;
-        return;
-    }
-
-    isPaused = false;
-    let pBtn = document.getElementById('pauseBtn');
-    pBtn.innerHTML = '<i class="fa-solid fa-pause"></i> Pause';
-    pBtn.classList.remove('paused');
-
-    document.getElementById('tickLeft').style.display = 'none';
-    document.getElementById('tickRight').style.display = 'none';
-    document.getElementById('writingSection').style.display = 'none';
-    document.getElementById('svgWritingBoard').innerHTML = '';
-
-    targetWord = allWordsList[currentQuestionIndex];
-
-    let alternativeWords = allWordsList.filter(w => w.arbiText !== targetWord.arbiText);
-    let randomAlternative = alternativeWords.length > 0 ? alternativeWords[Math.floor(Math.random() * alternativeWords.length)] : targetWord;
-
-    if(Math.random() > 0.5) {
-        leftWord = targetWord;
-        rightWord = randomAlternative;
-    } else {
-        leftWord = randomAlternative;
-        rightWord = targetWord;
-    }
-
-    document.getElementById('textLeft').innerText = leftWord.arbiText || '';
-    document.getElementById('textRight').innerText = rightWord.arbiText || '';
-
-    adjustText(); 
-    playTargetAudioLoop();
-    
-    timeLeft = maxDuration; 
-    startTimer();
-}
-
-function playTargetAudioLoop() {
-    if(!targetWord || !targetWord.audio) return;
-    if(currentAudio) currentAudio.pause();
-    
-    let audioPath = targetWord.audio;
-    // GitHub ഓൺലൈൻ URL ലിങ്ക് രൂപീകരിക്കുന്നു
-    if (!audioPath.startsWith('http')) {
-        if (audioPath.startsWith('data/')) {
-            audioPath = BASE_URL + audioPath;
-        } else {
-            audioPath = BASE_URL + 'data/' + audioPath;
-        }
-    }
-    
-    currentAudio = new Audio(audioPath + '?t=' + Date.now());
-    currentAudio.loop = true; 
-    
-    let playPromise = currentAudio.play();
-    if (playPromise !== undefined) {
-        playPromise.catch(error => {
-            console.log("ക്രോം ഓഡിയോ തടഞ്ഞു, സ്ക്രീൻ ക്ലിക്കിനായി കാക്കുന്നു...", error);
-            document.addEventListener('click', function unlockAndPlay() {
-                if(!isPaused) currentAudio.play();
-                document.removeEventListener('click', unlockAndPlay);
-            }, { once: true });
-        });
-    }
-}
-
-function startTimer() {
-    clearInterval(timerInterval);
-    let bar = document.getElementById('timerBar');
-    
-    timerInterval = setInterval(() => {
-        if(!isPaused) {
-            timeLeft -= 0.1;
-            let percentage = (timeLeft / maxDuration) * 100;
-            bar.style.width = percentage + '%';
+        if(data && Array.isArray(data.words)) { 
+            // അഡ്മിൻ പാനലിൽ Hide ചെയ്യാത്ത (unhidden) വാക്കുകൾ മാത്രം എടുക്കുന്നു
+            let activeWords = data.words.filter(w => !w.hidden && !w.isHidden); 
+            wordsDatabase = activeWords; 
             
-            if(timeLeft <= 0) {
-                clearInterval(timerInterval);
-                handleTimeoutAndReveal();
-            }
-        }
-    }, 100);
-}
-
-function togglePause() {
-    let pBtn = document.getElementById('pauseBtn');
-    if(!currentAudio) return;
-
-    if(!isPaused) {
-        isPaused = true;
-        currentAudio.pause(); 
-        pBtn.innerHTML = '<i class="fa-solid fa-play"></i> Play';
-        pBtn.classList.add('paused');
-    } else {
-        isPaused = false;
-        currentAudio.play(); 
-        pBtn.innerHTML = '<i class="fa-solid fa-pause"></i> Pause';
-        pBtn.classList.remove('paused');
-    }
-}
-
-function handleTimeoutAndReveal() {
-    if(currentAudio) {
-        currentAudio.loop = false;
-        currentAudio.pause();
-    }
-
-    let correctSide = (targetWord === leftWord) ? 'Left' : 'Right';
-    document.getElementById('tick' + correctSide).style.display = 'block';
-    document.getElementById('writingSection').style.display = 'block';
-
-    currentQuestionIndex++;
-
-    if(targetWord.writingPaths && targetWord.writingPaths.length > 0) {
-        animateHandwritingWithPen('svgWritingBoard', targetWord.writingPaths);
-    } else {
-        setTimeout(generateQuestion, 3000);
-    }
-}
-
-function animateHandwritingWithPen(svgId, pathsData) {
-    let board = document.getElementById(svgId);
-    board.innerHTML = ""; 
-    
-    let penImg = document.createElementNS("http://www.w3.org/2000/svg", "image");
-    penImg.setAttributeNS("http://www.w3.org/1999/xlink", "href", "hand.png"); 
-    penImg.setAttribute("width", "300");
-    penImg.setAttribute("height", "300");
-    penImg.setAttribute("style", "position: absolute; z-index: 100; pointer-events: none; transition: transform 0.05s linear;");
-    penImg.style.display = "none";
-    
-    let pIdx = 0;
-    
-    function drawNextPath() {
-        if(isPaused) {
-            setTimeout(drawNextPath, 100);
-            return;
-        }
-
-        if(pIdx >= pathsData.length) {
-            penImg.style.display = "none";
-            setTimeout(generateQuestion, 3000);
-            return;
-        }
-        
-        let currentPathPoints = pathsData[pIdx];
-        if(!currentPathPoints || currentPathPoints.length === 0) {
-            pIdx++; drawNextPath(); return;
-        }
-        
-        let g = document.createElementNS("http://www.w3.org/2000/svg", "g");
-        let svgPathsArray = [];
-        
-        for(let i=0; i<16; i++) {
-            let p = document.createElementNS("http://www.w3.org/2000/svg", "path");
-            p.setAttribute("transform", `translate(${(i-8)*0.4}, ${-(i-8)})`);
-            p.setAttribute("stroke", "#e74c3c"); 
-            p.setAttribute("stroke-width", "3");
-            p.setAttribute("fill", "none");
-            p.setAttribute("stroke-linecap", "round");
-            g.appendChild(p);
-            svgPathsArray.push(p);
-        }
-        board.appendChild(g);
-        board.appendChild(penImg);
-        penImg.style.display = "block";
-        
-        let ptIdx = 0;
-        let dStr = `M ${currentPathPoints[0].x} ${currentPathPoints[0].y}`;
-        
-        function tracePoints() {
-            if(isPaused) {
-                setTimeout(tracePoints, 100);
-                return;
-            }
-
-            if(ptIdx >= currentPathPoints.length) {
-                pIdx++;
-                setTimeout(drawNextPath, 150);
-                return;
-            }
+            // ഏറ്റവും അവസാനം അഡ്മിൻ പാനലിൽ ചേർത്ത 30 വാക്കുകൾ മാത്രം വേർതിരിക്കുന്നു
+            if(wordsDatabase.length > 30) { 
+                wordsDatabase = wordsDatabase.slice(-30); 
+            } 
             
-            let pt = currentPathPoints[ptIdx];
-            if(ptIdx === 0) dStr = `M ${pt.x} ${pt.y}`;
-            else dStr += ` L ${pt.x} ${pt.y}`;
-            
-            svgPathsArray.forEach(p => p.setAttribute("d", dStr));
-            
-            penImg.setAttribute("x", pt.x - 45); 
-            penImg.setAttribute("y", pt.y - 70); 
+            if(wordsDatabase.length === 0) { 
+                alert("വേർഡ് ആപ്പിൽ അൺഹൈഡ് ചെയ്ത വാക്കുകൾ ഒന്നും കണ്ടെത്തിയില്ല!"); 
+                document.getElementById('loadingOverlay').style.display = 'none'; 
+                return; 
+            } 
 
-            ptIdx++;
-            requestAnimationFrame(tracePoints);
-        }
-        tracePoints();
+            document.getElementById('setupBox').style.display = 'none'; 
+            document.getElementById('examBox').style.display = 'block'; 
+            document.getElementById('loadingOverlay').style.display = 'none'; 
+            
+            currentIdx = 0; 
+            loadNextDictationWord(); 
+        } 
+    } catch(err) { 
+        alert("ഡാറ്റ ലോഡ് ചെയ്യുന്നതിൽ പരാജയം: " + err.message); 
+        document.getElementById('loadingOverlay').style.display = 'none'; 
+    } 
+} 
+
+function loadNextDictationWord() { 
+    if(currentIdx >= wordsDatabase.length) { 
+        alert("🎉 കേട്ടെഴുത്ത് പരീക്ഷ വിജയകരമായി അവസാനിച്ചു!"); 
+        exitExamMode(); 
+        return; 
+    } 
+
+    let currentWord = wordsDatabase[currentIdx]; 
+    document.getElementById('wordIndexTitle').innerText = `വാക്ക് ${currentIdx + 1} / ${wordsDatabase.length}`; 
+    document.getElementById('examStatusText').innerText = "✍️ വോയ്സ് ശ്രദ്ധിച്ചു ബുക്കിലേക്ക് എഴുതുക..."; 
+    document.getElementById('answerPanel').style.display = 'none'; 
+    document.getElementById('ansHwSvg').style.display = 'none'; 
+    document.getElementById('timerSection').style.display = 'block'; 
+
+    countdownValue = 60; 
+    document.getElementById('countdownText').innerText = countdownValue; 
+    updateTimerCircle(60); 
+
+    // ശബ്ദം പ്ലേ ചെയ്യുന്നു 
+    playWordVoice(currentWord.audio); 
+
+    // 1 മിനിറ്റ് തീരുന്നത് വരെ ഓരോ 4.5 സെക്കൻഡിലും ഒരേ വാക്ക് ആവർത്തിച്ചു പ്ലേ ചെയ്യാനുള്ള ലൂപ്പ്
+    if(audioLoopTimer) clearInterval(audioLoopTimer); 
+    audioLoopTimer = setInterval(() => { 
+        playWordVoice(currentWord.audio); 
+    }, 4500); 
+
+    // 60 സെക്കൻഡ് കൗണ്ട്ഡൗൺ ആരംഭിക്കുന്നു 
+    if(countdownTimer) clearInterval(countdownTimer); 
+    countdownTimer = setInterval(() => { 
+        countdownValue--; 
+        document.getElementById('countdownText').innerText = countdownValue; 
+        updateTimerCircle(countdownValue); 
+
+        if(countdownValue <= 0) { 
+            clearInterval(countdownTimer); 
+            clearInterval(audioLoopTimer); 
+            revealWordAnswer(currentWord); 
+        } 
+    }, 1000); 
+} 
+
+function playWordVoice(audioName) { 
+    if(!audioName) {
+        showToast("ഈ വാക്കിന് ശബ്ദം നൽകിയിട്ടില്ല.");
+        return; 
     }
-    drawNextPath();
-}
-</script>
-</body>
+    const user = document.getElementById('userInput').value.trim(); 
+    const repo = document.getElementById('repoInput').value.trim(); 
+    
+    let cleanAudioName = audioName.trim();
+    let audioPath = cleanAudioName.startsWith('data/') ? cleanAudioName : `data/${cleanAudioName}`;
+
+    // ഗിറ്റ്ഹബ്ബിൽ സേവ് ചെയ്തിരിക്കുന്ന ശബ്ദത്തിന്റെ പാത്ത് നിർമ്മിക്കുന്നു
+    dictationAudio.src = `https://raw.githubusercontent.com/${user}/${repo}/main/${audioPath}?t=${Date.now()}`; 
+    dictationAudio.play().catch(e => {
+        console.log("ശബ്ദം പ്ലേ ചെയ്യാൻ കഴിഞ്ഞില്ല: ", e);
+        showToast("ശബ്ദം പ്ലേ ചെയ്യുന്നതിൽ തടസ്സം!");
+    }); 
+} 
+
+function replayCurrentAudio() { 
+    if(wordsDatabase[currentIdx]) { 
+        playWordVoice(wordsDatabase[currentIdx].audio); 
+    } 
+} 
+
+function updateTimerCircle(value) { 
+    const circle = document.getElementById('timerProgressCircle'); 
+    const circumference = 502; // 2 * pi * r (2 * 3.14 * 80) 
+    const offset = circumference - (value / 60) * circumference; 
+    circle.style.strokeDashoffset = offset; 
+} 
+
+function revealWordAnswer(word) { 
+    document.getElementById('timerSection').style.display = 'none'; 
+    document.getElementById('examStatusText').innerText = "📢 സമയം അവസാനിച്ചു! ശരിയായ ഉത്തരം പരിശോധിക്കുക:"; 
+    document.getElementById('answerPanel').style.display = 'block'; 
+    
+    document.getElementById('ansMal').innerText = word.mal || ''; 
+    document.getElementById('ansArbi').innerText = word.arbiText || word.arbi || ''; 
+
+    // ഹാൻഡ്‌‌റൈറ്റിംഗ് ലഭ്യമാണെങ്കിൽ വരച്ചു കാണിക്കുന്നു 
+    if(word.writingPaths && word.writingPaths.length > 0) { 
+        let svg = document.getElementById('ansHwSvg'); 
+        svg.style.display = 'block'; 
+        svg.innerHTML = ""; 
+        
+        word.writingPaths.forEach(path => { 
+            const g = document.createElementNS("http://www.w3.org/2000/svg", "g"); 
+            for(let i=0; i<16; i++) { 
+                let p = document.createElementNS("http://www.w3.org/2000/svg", "path"); 
+                p.setAttribute("transform", `translate(${(i-8)*0.4}, ${-(i-8)})`); 
+                p.setAttribute("stroke", "#ef4444"); 
+                p.setAttribute("stroke-width", "2.5"); 
+                p.setAttribute("fill", "none"); 
+                p.setAttribute("stroke-linecap", "round"); 
+                let dStr = `M ${path[0].x} ${path[0].y}`; 
+                for(let pt=1; pt<path.length; pt++) { dStr += ` L ${path[pt].x} ${path[pt].y}`; } 
+                p.setAttribute("d", dStr); 
+                g.appendChild(p); 
+            } 
+            svg.appendChild(g); 
+        }); 
+    } 
+
+    // 7 സെക്കൻഡ് നേരം പ്രൊജക്ടറിൽ ഉത്തരം കാണിച്ച ശേഷം യാന്ത്രികമായി അടുത്ത വാക്കിലേക്ക് പോകുന്നു
+    setTimeout(() => { 
+        currentIdx++; 
+        loadNextDictationWord(); 
+    }, 7000); 
+} 
+
+function exitExamMode() { 
+    if(countdownTimer) clearInterval(countdownTimer); 
+    if(audioLoopTimer) clearInterval(audioLoopTimer); 
+    dictationAudio.pause(); 
+    document.getElementById('setupBox').style.display = 'block'; 
+    document.getElementById('examBox').style.display = 'none'; 
+} 
+</script> 
+</body> 
 </html>
