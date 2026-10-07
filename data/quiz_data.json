@@ -1,23 +1,11 @@
 {
-  "version": 1791391025964,
+  "version": 1791391933028,
   "quizInfo": {
-    "class": "Class 2",
-    "subject": "Duroos",
-    "part": "Part 2",
-    "chapter": "ചാപ്റ്റർ 1",
+    "class": "",
+    "subject": "",
+    "part": "",
+    "chapter": "",
     "lessonName": ""
   },
-  "questions": [
-    {
-      "qText": "ആദ്യത്തെ പ്രവാചകൻ ആരാണ്",
-      "correctText": "ആദം നബി",
-      "wrong1Text": "ഇബ്രാഹിം നബി",
-      "wrong2Text": "0",
-      "qSrc": "",
-      "correctSrc": "",
-      "wrong1Src": "",
-      "wrong2Src": "",
-      "hidden": false
-    }
-  ]
+  "questions": []
 }
