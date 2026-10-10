@@ -1,9 +1,16 @@
 {
-  "version": 1791624893464,
+  "version": 1791625210406,
   "words": [
     {
       "mal": "മലയാളം",
       "arbiText": "مَلَیَاۻمٛ",
+      "audio": "",
+      "writingPaths": null,
+      "hidden": false
+    },
+    {
+      "mal": "ഉമ്മ",
+      "arbiText": "اُمَّ",
       "audio": "",
       "writingPaths": null,
       "hidden": false
